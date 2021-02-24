@@ -4,10 +4,16 @@
 
 #ifndef APPROXIMATION_MATRIX_H
 #define APPROXIMATION_MATRIX_H
+#include <cmath>
 
 class Matrix {
 public:
     double** data;
+
+private:
+    int n, m;
+
+public:
 
     Matrix(double* arr, int n, int m) {
         this->n = n;
@@ -22,6 +28,9 @@ public:
     }
 
     ~Matrix() {
+        for (int i = 0; i < n; i++){
+            delete [] data[i];
+        }
         delete[] data;
     }
 
@@ -35,10 +44,14 @@ public:
     }
 
     void swap(int i, int j) {
-        for (int c = 0; c < this->n; c++){
-            auto tmp = data[j][c];
-            data[j][c] = data[i][c];
-            data[i][c] = tmp;
+        if (i < this->n && j < this->n){
+            for (int c = 0; c < this->m; c++){
+                auto tmp = data[j][c];
+                data[j][c] = data[i][c];
+                data[i][c] = tmp;
+            }
+        } else {
+            std::cout << "Error swap \n";
         }
     }
 
@@ -127,8 +140,6 @@ public:
         return ans;
     }
 
-private:
-    int n, m;
 };
 
 

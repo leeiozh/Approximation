@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/back_gauss.h">
+			<Option target="approximation"/>
+		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/gauss.h">
+			<Option target="approximation"/>
+		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/main.cpp">
 			<Option target="approximation"/>
 		</Unit>
