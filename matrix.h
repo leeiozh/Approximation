@@ -39,9 +39,9 @@ private:
 
 public:
 
-    Matrix() { }
+    Matrix<T> () {}
 
-    Matrix(int n, int m, T filler) {
+    Matrix<T> (int n, int m, T filler) {
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -53,7 +53,7 @@ public:
         }
     }
 
-    Matrix(int n, int m) {
+    Matrix<T> (int n, int m) {
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -62,7 +62,7 @@ public:
         }
     }
 
-    Matrix(T* arr, int n, int m) {
+    Matrix<T> (T* arr, int n, int m) {
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -74,16 +74,25 @@ public:
         }
     }
 
-    Matrix(Matrix &other) {
-        this->n = other.n;
-        this->m = other.m;
-        this->data = new T*[other.n];
-        for (int i = 0; i < other.n; i++) {
-            this->data[i] = new T[other.m];
-            for (int j = 0; j < other.m; j++) {
+    Matrix<T> (Matrix <T> &other) {
+        int n = other.get_dimensions().first, m = other.get_dimensions().second;
+        this->n = n;
+        this->m = m;
+        this->data = new T*[n];
+        for (int i = 0; i < n; i++) {
+            this->data[i] = new T[m];
+            for (int j = 0; j < m; j++) {
                 this->data[i][j] = other.data[i][j];
             }
         }
+    }
+
+    Matrix (Matrix &&other) {
+        int n = other.get_dimensions().first, m = other.get_dimensions().second;
+        this->n = n;
+        this->m = m;
+        *(this->data) = *(other.data);
+        other.data = nullptr;
     }
 
     ~Matrix() {
@@ -93,7 +102,7 @@ public:
         delete[] data;
     }
 
-    Matrix<T> & operator = (Matrix &other) {
+    Matrix<T> & operator = (Matrix <T> &other) {
         if (&other == this) {
             return *this;
         }
@@ -115,6 +124,54 @@ public:
             }
         }
         return *this;
+    }
+
+    Matrix<T> & operator = (Matrix <T> &&other) {
+        if (this != &other) {
+            int n = other.get_dimensions().first, m = other.get_dimensions().second;
+            for (int i = 0; i < this->n; i++){
+                delete[] this->data[i];
+            }
+            delete[] this->data;
+            this->data = new T*[n];
+            for (int i = 0; i < n; i++) {
+                this->data[i] = new T[m];
+                for (int j = 0; j < m; j++) {
+                    this->data[i][j] = other.data[i][j];
+                }
+            }
+            this->n = n;
+            this->m = m;
+        }
+    }
+
+    void resize(int n, int m, T filler) {
+        for (int i = 0; i < this->n; i++){
+            delete[] this->data[i];
+        }
+        delete[] this->data;
+        this->n = n;
+        this->m = m;
+        this->data = new T*[n];
+        for (int i = 0; i < n; i++) {
+            this->data[i] = new T[m];
+            for (int j = 0; j < m; j++) {
+                this->data[i][j] = filler;
+            }
+        }
+    }
+
+    void resize(int n, int m) {
+        for (int i = 0; i < this->n; i++){
+            delete[] this->data[i];
+        }
+        delete[] this->data;
+        this->n = n;
+        this->m = m;
+        this->data = new T*[n];
+        for (int i = 0; i < n; i++) {
+            this->data[i] = new T[m];
+        }
     }
 
     Matrix<T> operator + (Matrix<T> &other) {
