@@ -143,6 +143,7 @@ public:
             this->n = n;
             this->m = m;
         }
+        return *this;
     }
 
     void resize(int n, int m, T filler) {
