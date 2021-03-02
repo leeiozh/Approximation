@@ -213,7 +213,7 @@ public:
         return ans;
     }
 
-    Matrix<T> operator * (T num) {
+    Matrix<T> operator * (double num) {
         T arr[this->n][this->m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
@@ -222,6 +222,10 @@ public:
         }
         Matrix ans(*arr, this->n, this->m);
         return ans;
+    }
+
+    Matrix<T> operator / (double num) {
+        return *this * (1.0 / num);
     }
 
     Matrix<T> operator | (Matrix &other) {
@@ -273,14 +277,11 @@ public:
     }
 
     void swap(int i, int j) {
-        if (i < this->n && j < this->n){
-            for (int c = 0; c < this->m; c++){
-                auto tmp = data[j][c];
-                data[j][c] = data[i][c];
-                data[i][c] = tmp;
-            }
-        } else {
-            std::cout << "Error swap \n";
+        assert((i < this->n) && (j < this->n) && "WARNING! Wrong index. Swap error.");
+        for (int c = 0; c < this->m; c++){
+            auto tmp = data[j][c];
+            data[j][c] = data[i][c];
+            data[i][c] = tmp;
         }
     }
 
