@@ -15,12 +15,8 @@ int main() {
     for (int i = 0; i < n; i++) {
         std::cin >> b[i][0];
     }
-    Matrix test(*arr, n, m);
-    Matrix best(*b, n, 1);
-    std::cout << "------" << '\n';
-    test.print();
-    std::cout << "------" << '\n';
-    Matrix result = gauss(test, best);
-    result.print();
+    Matrix<double> test(*arr, n, m);
+    Matrix<double> best(*b, n, 1);
+    std::cout << gauss(test, best);
 }
 

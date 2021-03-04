@@ -23,6 +23,6 @@ gauss.h
 /home/leeiozh/mipt/slae/approximation/gauss.h
 
 /home/leeiozh/mipt/slae/approximation/matrix.h
-cmath
+cassert
 -
 

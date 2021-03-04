@@ -30,6 +30,11 @@ std::istream& operator >> (std::istream &in, Matrix<T> &matrix) {
 }
 
 template <typename T>
+Matrix<T> operator * (double num, Matrix<T> &M) {
+    return M * num;
+}
+
+template <typename T>
 class Matrix {
 public:
     T** data;
@@ -87,7 +92,7 @@ public:
         }
     }
 
-    Matrix (Matrix &&other) {
+    Matrix<T> (Matrix &&other) {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         this->n = n;
         this->m = m;
@@ -99,7 +104,7 @@ public:
         for (int i = 0; i < n; i++){
             delete[] data[i];
         }
-        delete[] data;
+        delete [] data;
     }
 
     Matrix<T> & operator = (Matrix <T> &other) {
@@ -273,14 +278,13 @@ public:
     }
 
     void swap(int i, int j) {
-        if (i < this->n && j < this->n){
-            for (int c = 0; c < this->m; c++){
-                auto tmp = data[j][c];
-                data[j][c] = data[i][c];
-                data[i][c] = tmp;
+        assert(i < this->n && j < this->n && "Error swap index");
+        if (i != j) {
+            for (int c = 0; c < this->m; c++) {
+                data[i][c] += data[j][c];
+                data[j][c] = data[i][c] - data[j][c];
+                data[i][c] -= data[j][c];
             }
-        } else {
-            std::cout << "Error swap \n";
         }
     }
 
@@ -289,10 +293,7 @@ public:
     }
 
     bool is_square() {
-        if (this->n == this->m) {
-            return true;
-        }
-        return false;
+        return (this->n == this->m);
     }
 
     Matrix<T> get_submatrix(int start_str, int start_col, int n, int m) {
@@ -374,9 +375,5 @@ public:
 
 };
 
-template <typename T>
-Matrix<T> operator * (double num, Matrix<T> &M) {
-     return M * num;
-}
 
 #endif //APPROXIMATION_MATRIX_H=

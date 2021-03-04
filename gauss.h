@@ -7,8 +7,10 @@
 #include "back_gauss.h"
 #include <cmath>
 
-int col_non_zero(Matrix& A, const int col){
-    if (std::abs(A.data[col][col]) > 1e-10) return col;
+template<typename T>
+
+int col_non_zero(Matrix<T>& A, const int col){
+    if (A.data[col][col] > 1e-10 || A.data[col][col] < -1e-10) return col;
     else {
         for (auto i = col + 1; i < A.get_dimensions().first; i++){
             if (A.data[i][col] > 1e-10) return i;
@@ -17,34 +19,37 @@ int col_non_zero(Matrix& A, const int col){
     return col;
 }
 
-int triangulation(Matrix& A, Matrix& b){
+template<typename T>
 
-    if (b.get_dimensions().second != 1){
-        std::cout << "Error, b has not 1 columns";
-    } else {
+int triangulation(Matrix<T>& A, Matrix<T>& b){
+    assert(A.is_square() && "Gauss method can be used only for square matrix ");
+    assert(b.get_dimensions().second == 1 && "Error, b is not 1 columns");
+    assert(A.get_dimensions().first == b.get_dimensions().first && "Matrix and free column must have same dimensions");
 
-        int swap_count = 0;
+    int swap_count = 0;
+    int n = A.get_dimensions().first;
 
-        for (int i = 0; i < A.get_dimensions().first - 1; i++){
-            if (std::abs(A.data[col_non_zero(A, i)][i]) > 1e-10) {
-                A.swap(i, col_non_zero(A, i));
-                b.swap(i, col_non_zero(A, i));
-                swap_count ++;
-            } else {
-                std::cout << "A is degenerate\n";};
-            for (int k = i + 1; k < A.get_dimensions().first; k++){
-                auto coeff = A.data[k][i] / A.data[i][i];
-                for (auto s = 0; s < A.get_dimensions().second; s++){
-                    A.data[k][s] -= A.data[i][s] * coeff;
-                }
-                b.data[k][0] -= b.data[i][0] * coeff;
+    for (int i = 0; i < n - 1; i++){
+        auto c = col_non_zero(A, i);
+        assert(A.data[c][i] > 1e-10 || A.data[c][i] < -1e-10 && "A is degenerate\n");
+        A.swap(i, c);
+        b.swap(i, c);
+        if (i != c) swap_count++;
+        for (int k = i + 1; k < n; k++){
+            auto coeff = A.data[k][i] / A.data[i][i];
+            for (auto s = 0; s < n; s++){
+                A.data[k][s] -= A.data[i][s] * coeff;
             }
+            b.data[k][0] -= b.data[i][0] * coeff;
         }
-        return swap_count;
     }
+    return swap_count;
 }
 
-Matrix gauss(Matrix A, Matrix b){
+
+template<typename T>
+
+Matrix<T> gauss(Matrix<T> A, Matrix<T> b){
     triangulation(A, b);
     return back_gauss(A, b);
 }
