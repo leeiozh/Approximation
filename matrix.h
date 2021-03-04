@@ -30,11 +30,6 @@ std::istream& operator >> (std::istream &in, Matrix<T> &matrix) {
 }
 
 template <typename T>
-Matrix<T> operator * (double num, Matrix<T> &M) {
-    return M * num;
-}
-
-template <typename T>
 class Matrix {
 public:
     T** data;
@@ -92,7 +87,7 @@ public:
         }
     }
 
-    Matrix<T> (Matrix &&other) {
+    Matrix (Matrix &&other) {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         this->n = n;
         this->m = m;
@@ -104,7 +99,7 @@ public:
         for (int i = 0; i < n; i++){
             delete[] data[i];
         }
-        delete [] data;
+        delete[] data;
     }
 
     Matrix<T> & operator = (Matrix <T> &other) {
@@ -148,6 +143,7 @@ public:
             this->n = n;
             this->m = m;
         }
+        return *this;
     }
 
     void resize(int n, int m, T filler) {
@@ -227,6 +223,10 @@ public:
         }
         Matrix ans(*arr, this->n, this->m);
         return ans;
+    }
+
+    Matrix<T> operator / (double num) {
+        return *this * (1.0 / num);
     }
 
     Matrix<T> operator | (Matrix &other) {
@@ -375,5 +375,9 @@ public:
 
 };
 
+template <typename T>
+Matrix<T> operator * (double num, Matrix<T> &M) {
+     return M * num;
+}
 
 #endif //APPROXIMATION_MATRIX_H=
