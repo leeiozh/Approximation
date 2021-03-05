@@ -3,6 +3,7 @@
 
 CMakeFiles/approximation.dir/main.cpp.o: ../back_gauss.h
 CMakeFiles/approximation.dir/main.cpp.o: ../gauss.h
+CMakeFiles/approximation.dir/main.cpp.o: ../head_gauss.h
 CMakeFiles/approximation.dir/main.cpp.o: ../main.cpp
 CMakeFiles/approximation.dir/main.cpp.o: ../matrix.h
 

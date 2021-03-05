@@ -1,6 +1,7 @@
 #include <iostream>
 #include "matrix.h"
 #include "gauss.h"
+#include "head_gauss.h"
 
 int main() {
     int n, m;
@@ -17,6 +18,6 @@ int main() {
     }
     Matrix<double> test(*arr, n, m);
     Matrix<double> best(*b, n, 1);
-    std::cout << gauss(test, best);
+    std::cout << head_gauss(test, best);
 }
 

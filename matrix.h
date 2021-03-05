@@ -271,7 +271,7 @@ public:
         return ans;
     }
 
-    T& operator()(int i, int j) {
+    T operator() (const int& i, const int& j) {
         assert(i > -1 && i < this->n && "WARNING! Array overflow");
         assert(j > -1 && j < this->m && "WARNING! Array overflow");
         return this->data[i][j];
@@ -378,6 +378,12 @@ public:
 template <typename T>
 Matrix<T> operator * (double num, Matrix<T> &M) {
      return M * num;
+}
+
+template<typename T>
+T Tabs(const T& a) {
+    if (a < T(0)) return -a;
+    else return a;
 }
 
 #endif //APPROXIMATION_MATRIX_H=

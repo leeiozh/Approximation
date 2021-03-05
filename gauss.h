@@ -5,12 +5,11 @@
 #ifndef APPROXIMATION_GAUSS_H
 #define APPROXIMATION_GAUSS_H
 #include "back_gauss.h"
-#include <cmath>
 
 template<typename T>
 
 int col_non_zero(Matrix<T>& A, const int col){
-    if (A.data[col][col] > 1e-10 || A.data[col][col] < -1e-10) return col;
+    if (Tabs(A.data[col][col] > 1e-10)) return col;
     else {
         for (auto i = col + 1; i < A.get_dimensions().first; i++){
             if (A.data[i][col] > 1e-10) return i;
@@ -31,10 +30,12 @@ int triangulation(Matrix<T>& A, Matrix<T>& b){
 
     for (int i = 0; i < n - 1; i++){
         auto c = col_non_zero(A, i);
-        assert(A.data[c][i] > 1e-10 || A.data[c][i] < -1e-10 && "A is degenerate\n");
-        A.swap(i, c);
-        b.swap(i, c);
-        if (i != c) swap_count++;
+        assert(Tabs(A.data[c][i]) > 1e-10 && "A is degenerate\n");
+        if (i != c){
+            A.swap(i, c);
+            b.swap(i, c);
+            swap_count++;
+        }
         for (int k = i + 1; k < n; k++){
             auto coeff = A.data[k][i] / A.data[i][i];
             for (auto s = 0; s < n; s++){
@@ -49,7 +50,7 @@ int triangulation(Matrix<T>& A, Matrix<T>& b){
 
 template<typename T>
 
-Matrix<T> gauss(Matrix<T> A, Matrix<T> b){
+Matrix<T> gauss(Matrix<T> &A, Matrix<T> &b){
     triangulation(A, b);
     return back_gauss(A, b);
 }

@@ -11,8 +11,10 @@
 /home/leeiozh/mipt/slae/approximation/gauss.h
 back_gauss.h
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
-cmath
--
+
+/home/leeiozh/mipt/slae/approximation/head_gauss.h
+back_gauss.h
+/home/leeiozh/mipt/slae/approximation/back_gauss.h
 
 /home/leeiozh/mipt/slae/approximation/main.cpp
 iostream
@@ -21,6 +23,8 @@ matrix.h
 /home/leeiozh/mipt/slae/approximation/matrix.h
 gauss.h
 /home/leeiozh/mipt/slae/approximation/gauss.h
+head_gauss.h
+/home/leeiozh/mipt/slae/approximation/head_gauss.h
 
 /home/leeiozh/mipt/slae/approximation/matrix.h
 cassert
