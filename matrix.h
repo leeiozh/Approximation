@@ -1,6 +1,17 @@
 #ifndef APPROXIMATION_MATRIX_H
 #define APPROXIMATION_MATRIX_H
-#include <cassert>
+#include <exception>
+
+class Matrix_exception: public std::exception{
+public:
+    explicit Matrix_exception(std::string r): reason_{std::move(r)}{}
+
+    char const* what() const noexcept {
+        return reason_.c_str();
+    }
+private:
+    std::string reason_;
+};
 
 template <typename T>
 class Matrix;
@@ -19,6 +30,9 @@ std::ostream& operator << (std::ostream &out, const Matrix<T> &matrix) {
 template <typename T>
 std::istream& operator >> (std::istream &in, Matrix<T> &matrix) {
     in >> matrix.n >> matrix.m;
+    if (matrix.n < 1 || matrix.m < 1) {
+        throw Matrix_exception("ERROR! Cannot create matrix with negative dimentions");
+    }
     matrix.data = new T*[matrix.n];
     for (int i = 0; i < matrix.n; i++) {
         matrix.data[i] = new T[matrix.m];
@@ -42,6 +56,9 @@ public:
     Matrix<T> () {}
 
     Matrix<T> (int n, int m, T filler) {
+        if (n < 1 || m < 1) {
+            throw Matrix_exception("Cannot create matrix with negative dimentions");
+        }
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -54,6 +71,9 @@ public:
     }
 
     Matrix<T> (int n, int m) {
+        if (n < 1 || m < 1) {
+            throw Matrix_exception("Cannot create matrix with negative dimentions");
+        }
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -63,6 +83,9 @@ public:
     }
 
     Matrix<T> (T* arr, int n, int m) {
+        if (n < 1 || m < 1) {
+            throw Matrix_exception("Cannot create matrix with negative dimentions");
+        }
         this->n = n;
         this->m = m;
         this->data = new T*[n];
@@ -74,7 +97,7 @@ public:
         }
     }
 
-    Matrix<T> (Matrix <T> &other) {
+    Matrix<T> (Matrix <T> const &other) {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         this->n = n;
         this->m = m;
@@ -147,6 +170,9 @@ public:
     }
 
     void resize(int n, int m, T filler) {
+        if (n < 1 || m < 1) {
+            throw Matrix_exception("Cannot create matrix with negative dimentions");
+        }
         for (int i = 0; i < this->n; i++){
             delete[] this->data[i];
         }
@@ -163,6 +189,9 @@ public:
     }
 
     void resize(int n, int m) {
+        if (n < 1 || m < 1) {
+            throw Matrix_exception("Cannot create matrix with negative dimentions");
+        }
         for (int i = 0; i < this->n; i++){
             delete[] this->data[i];
         }
@@ -175,12 +204,11 @@ public:
         }
     }
 
-    Matrix<T> operator + (Matrix<T> &other) {
+    Matrix<T> operator + (Matrix<T> const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        assert((this->n == n && this->m == m) && "Summ is defined only for same dimentioned matrixes.");
-        /*if (this->n != other.n || this->m != other.m) {
-            std::cout << "Summ is defined only for same dimentioned matrixes." << '\n';
-        }*/
+        if (!(this->n == n && this->m == m)) {
+            throw Matrix_exception("Summ is defined only for same dimentioned matrixes.");
+        }
         T arr[this->n][this->m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
@@ -191,16 +219,15 @@ public:
         return ans;
     }
 
-    Matrix<T> operator - (Matrix &other) {
+    Matrix<T> operator - (Matrix const &other) const {
         return (other * -1) + *this;
     }
 
-    Matrix<T> operator * (Matrix &other) {
+    Matrix<T> operator * (Matrix const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        assert((this->m == n) && "WARNING! The row length of the first matrix is not equal to the column length of the second one.");
-        /*if (this->m != other.n) {
-            std::cout << "WARNING! The row length of the first matrix is not equal to the column length of the second one." << '\n';
-        }*/
+        if (this->m != n) {
+            throw Matrix_exception("WARNING! The row length of the first matrix is not equal to the column length of the second one.");
+        }
         T arr[this->n][m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < m; j++) {
@@ -214,7 +241,7 @@ public:
         return ans;
     }
 
-    Matrix<T> operator * (T num) {
+    Matrix<T> operator * (double num) const {
         T arr[this->n][this->m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
@@ -225,16 +252,15 @@ public:
         return ans;
     }
 
-    Matrix<T> operator / (double num) {
+    Matrix<T> operator / (double num) const {
         return *this * (1.0 / num);
     }
 
-    Matrix<T> operator | (Matrix &other) {
+    Matrix<T> operator | (Matrix const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        assert((this->n == n) && "To merge right both matrixes have to have same column length.");
-        /*if (this->n != other.n) {
-            std::cout << "To merge right both matrixes have to have same column length." << '\n';
-        }*/
+        if(this->n != n) {
+            throw Matrix_exception("To merge right both matrixes have to have same column length.");
+        }
         T arr[this->n][this->m + m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
@@ -250,12 +276,11 @@ public:
         return ans;
     }
 
-    Matrix<T> operator ^ (Matrix &other) {
+    Matrix<T> operator ^ (Matrix const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        assert((this->m == m) && "To merge bottom both matrixes have to have same row length.");
-        /*if (this->m != other.m) {
-            std::cout << "To merge bottom both matrixes have to have same row length." << '\n';
-        }*/
+        if (this->m != m) {
+            throw Matrix_exception("To merge bottom both matrixes have to have same row length.");
+        }
         T arr[this->n + n][this->m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
@@ -271,32 +296,47 @@ public:
         return ans;
     }
 
-    T operator() (const int& i, const int& j) {
-        assert(i > -1 && i < this->n && "WARNING! Array overflow");
-        assert(j > -1 && j < this->m && "WARNING! Array overflow");
+    T& operator()(int i, int j) const {
+        if (i < 0 || i >= this->n || j < 0 || j >=  this->m) {
+            throw Matrix_exception("WARNING! Array overflow");
+        }
         return this->data[i][j];
     }
 
     void swap(int i, int j) {
-        assert(i < this->n && j < this->n && "Error swap index");
-        if (i != j) {
-            for (int c = 0; c < this->m; c++) {
-                data[i][c] += data[j][c];
-                data[j][c] = data[i][c] - data[j][c];
-                data[i][c] -= data[j][c];
-            }
+        if (!((i < this->n) && (j < this->n))) {
+            throw Matrix_exception("WARNING! Wrong index. Swap error.");
+        }
+        for (int c = 0; c < this->m; c++){
+            auto tmp = data[j][c];
+            data[j][c] = data[i][c];
+            data[i][c] = tmp;
         }
     }
 
-    std::pair <int, int> get_dimensions() {
+    std::pair <int, int> get_dimensions() const {
         return std::make_pair(this->n, this->m);
     }
 
-    bool is_square() {
-        return (this->n == this->m);
+    int getN() const {
+        return this->n;
     }
 
-    Matrix<T> get_submatrix(int start_str, int start_col, int n, int m) {
+    int getM() const {
+        return this->m;
+    }
+
+    bool is_square() const {
+        if (this->n == this->m) {
+            return true;
+        }
+        return false;
+    }
+
+    Matrix<T> get_submatrix(int start_str, int start_col, int n, int m) const {
+        if (start_str < 0 || start_col < 0 || start_str + n >= this->n || start_col + m >= this->m) {
+            throw Matrix_exception("ERROR! Wrong dimentions.");
+        }
         T ans[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -307,33 +347,54 @@ public:
         return submatrix;
     }
 
-    T algebraic_addition(int i, int j) {
-        T sign = -1;
+    T algebraic_addition(int i, int j) const {
+        if (i < 0 || j < 0 || i >= this->n || j >= this->m) {
+            throw Matrix_exception("ERROR! Array overflow");
+        }
+        if (this->n == 1) {
+            return 1;
+        }
+        double sign = -1;
         if ((i + j) % 2 == 0) {
             sign = 1;
         }
         return (this->minor(i, j).determinant()) * sign;
     }
 
-    Matrix<T> inverse() {
-        assert(this->is_square() && "WARNING! The inverse matrix is defined only for square matrices.");
-        /*if (!this->is_square()) {
-            std::cout << "WARNING! The inverse matrix is defined only for square matrices." << '\n';
-            Matrix ans;
-            return ans;
-        }*/
-        T arr[this->n][this->m];
+    Matrix<T> transpose() const{
+        Matrix <T> ans(*this);
+        for (int i = 0; i < this->n; i++) {
+            for (int j = 0; j < i; j++) {
+                T a1 = ans(i, j), a2 = ans(j, i);
+                ans(i, j) = a2;
+                ans(j, i) = a1;
+            }
+        }
+        return ans;
+    }
+
+    Matrix<T> inverse() const {
         T det = this->determinant();
+        if (!(this->is_square())) {
+            throw Matrix_exception("WARNING! The inverse matrix is defined only for square matrices.");
+        }
+        if (det == 0) {
+            throw Matrix_exception("WARNING! The inverse matrix is defined only for matrices with determinant not equal to 0.");
+        }
+        T arr[this->n][this->m];
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
                 arr[i][j] = this->algebraic_addition(i, j) / det;
             }
         }
         Matrix ans(*arr, this->n, this->m);
-        return ans;
+        return ans.transpose();
     }
 
-    Matrix<T> minor(int i, int j) {
+    Matrix<T> minor(int i, int j) const {
+        if (i < 0 || j < 0 || i >= this->n || j >= this->m) {
+            throw Matrix_exception("ERROR! Array overflow");
+        }
         T arr[this->n - 1][this->m - 1];
         int str = 0, col = 0;
         for (int _i = 0; _i < this->n; _i++) {
@@ -354,12 +415,10 @@ public:
         return ans;
     }
 
-    T determinant() {
-        assert(this->is_square() && "WARNING! The determinant is defined only for square matrices.");
-        /*if (!this->is_square()) {
-            std::cout << "WARNING! The determinant is defined only for square matrices." << '\n';
-            return nan("1");
-        }*/
+    T determinant() const {
+        if (!(this->is_square())) {
+            throw Matrix_exception("WARNING! The determinant is defined only for square matrices.");
+        }
         if (this->n == 1 && this->m == 1) {
             return this->data[0][0];
         }
@@ -376,14 +435,8 @@ public:
 };
 
 template <typename T>
-Matrix<T> operator * (double num, Matrix<T> &M) {
+Matrix<T> operator * (double num, Matrix<T> const &M) {
      return M * num;
-}
-
-template<typename T>
-T Tabs(const T& a) {
-    if (a < T(0)) return -a;
-    else return a;
 }
 
 #endif //APPROXIMATION_MATRIX_H=
