@@ -114,7 +114,7 @@ public:
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         this->n = n;
         this->m = m;
-        *(this->data) = *(other.data);
+        this->data = other.data;
         other.data = nullptr;
     }
 
@@ -151,20 +151,10 @@ public:
 
     Matrix<T> & operator = (Matrix <T> &&other) {
         if (this != &other) {
-            int n = other.get_dimensions().first, m = other.get_dimensions().second;
-            for (int i = 0; i < this->n; i++){
-                delete[] this->data[i];
-            }
-            delete[] this->data;
-            this->data = new T*[n];
-            for (int i = 0; i < n; i++) {
-                this->data[i] = new T[m];
-                for (int j = 0; j < m; j++) {
-                    this->data[i][j] = other.data[i][j];
-                }
-            }
-            this->n = n;
-            this->m = m;
+            this->n = other.getN();
+            this->m = other.getM();
+            this->data = other.data;
+            other.data = nullptr;
         }
         return *this;
     }
