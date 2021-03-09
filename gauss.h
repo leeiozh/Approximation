@@ -4,15 +4,29 @@
 
 #ifndef APPROXIMATION_GAUSS_H
 #define APPROXIMATION_GAUSS_H
+#include <exception>
 #include "back_gauss.h"
+
+class gauss_exception: public std::exception{
+public:
+    explicit gauss_exception(std::string r): reason_{std::move(r)}{}
+
+    char const* what() const noexcept {
+        return reason_.c_str();
+    }
+private:
+    std::string reason_;
+};
+
+double const tolerance = 1e-10;
 
 template<typename T>
 
 int col_non_zero(Matrix<T>& A, const int col){
-    if (Tabs(A.data[col][col] > 1e-10)) return col;
+    if (abs(A(col, col) > tolerance)) return col;
     else {
-        for (auto i = col + 1; i < A.get_dimensions().first; i++){
-            if (A.data[i][col] > 1e-10) return i;
+        for (auto i = col + 1; i < A.getN(); i++){
+            if (A(i, col) > tolerance) return i;
         }
     }
     return col;
@@ -21,32 +35,31 @@ int col_non_zero(Matrix<T>& A, const int col){
 template<typename T>
 
 int triangulation(Matrix<T>& A, Matrix<T>& b){
-    assert(A.is_square() && "Gauss method can be used only for square matrix ");
-    assert(b.get_dimensions().second == 1 && "Error, b is not 1 columns");
-    assert(A.get_dimensions().first == b.get_dimensions().first && "Matrix and free column must have same dimensions");
+    if (!A.is_square()) throw gauss_exception("Warning! Gauss method can be used only for square matrix");
+    if (b.getM() != 1) throw gauss_exception("Error: b is not a one column");
+    if (A.getN() != b.getN()) throw gauss_exception("Warning! Matrix and free column must have same dimensions");
 
     int swap_count = 0;
-    int n = A.get_dimensions().first;
+    int n = A.getN();
 
     for (int i = 0; i < n - 1; i++){
         auto c = col_non_zero(A, i);
-        assert(Tabs(A.data[c][i]) > 1e-10 && "A is degenerate\n");
+        if (abs(A(c, i)) < tolerance) throw gauss_exception("Error: A is degenerate");
         if (i != c){
             A.swap(i, c);
             b.swap(i, c);
             swap_count++;
         }
         for (int k = i + 1; k < n; k++){
-            auto coeff = A.data[k][i] / A.data[i][i];
+            auto coeff = A(k, i)/ A(i, i);
             for (auto s = 0; s < n; s++){
-                A.data[k][s] -= A.data[i][s] * coeff;
+                A(k, s) -= A(i, s) * coeff;
             }
-            b.data[k][0] -= b.data[i][0] * coeff;
+            b(k, 0) -= b(i, 0) * coeff;
         }
     }
     return swap_count;
 }
-
 
 template<typename T>
 

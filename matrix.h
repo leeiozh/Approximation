@@ -197,7 +197,7 @@ public:
     Matrix<T> operator + (Matrix<T> const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         if (!(this->n == n && this->m == m)) {
-            throw Matrix_exception("Summ is defined only for same dimentioned matrixes.");
+            throw Matrix_exception("Sum is defined only for same dimensioned matrices.");
         }
         T arr[this->n][this->m];
         for (int i = 0; i < this->n; i++) {
@@ -269,7 +269,7 @@ public:
     Matrix<T> operator ^ (Matrix const &other) const {
         int n = other.get_dimensions().first, m = other.get_dimensions().second;
         if (this->m != m) {
-            throw Matrix_exception("To merge bottom both matrixes have to have same row length.");
+            throw Matrix_exception("To merge bottom both matrices have to have same row length.");
         }
         T arr[this->n + n][this->m];
         for (int i = 0; i < this->n; i++) {
