@@ -1,6 +1,7 @@
 #ifndef APPROXIMATION_MATRIX_H
 #define APPROXIMATION_MATRIX_H
 #include <exception>
+#include <cmath>
 
 class Matrix_exception: public std::exception{
 public:
@@ -48,7 +49,7 @@ class Matrix {
 public:
     T** data;
 
-private:
+protected:
     int n, m;
 
 public:
@@ -72,19 +73,24 @@ public:
 
     Matrix<T> (int n, int m) {
         if (n < 1 || m < 1) {
-            throw Matrix_exception("Cannot create matrix with negative dimentions");
+            throw Matrix_exception("Cannot create matrix with dispositive dimentions");
         }
         this->n = n;
         this->m = m;
-        this->data = new T*[n];
+        this->data = new T* [n];
         for (int i = 0; i < n; i++) {
             this->data[i] = new T[m];
+        }
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                data[i][j] = 0;
+            }
         }
     }
 
     Matrix<T> (T* arr, int n, int m) {
         if (n < 1 || m < 1) {
-            throw Matrix_exception("Cannot create matrix with negative dimentions");
+            throw Matrix_exception("Cannot create matrix with dispositive dimentions");
         }
         this->n = n;
         this->m = m;
@@ -110,43 +116,34 @@ public:
         }
     }
 
-    Matrix (Matrix &&other) {
-        int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        this->n = n;
-        this->m = m;
+    Matrix<T> (Matrix<T> &&other) {
+        this->n = other.getN();
+        this->m = other.getM();
         this->data = other.data;
         other.data = nullptr;
     }
 
     ~Matrix() {
-        for (int i = 0; i < n; i++){
-            delete[] data[i];
-        }
+        if (data != nullptr) {
+            for (int i = 0; i < n; i++){
+                delete[] data[i];
+            }
         delete[] data;
+        }
     }
 
     Matrix<T> & operator = (Matrix <T> &other) {
         if (&other == this) {
             return *this;
         }
-        if (this->data != nullptr) {
-            for (int i = 0; i < n; i++){
-                delete[] data[i];
-            }
-            delete[] data;
-            data = nullptr;
-        }
-        int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        this->n = n;
-        this->m = m;
-        this->data = new T*[n];
-        for (int i = 0; i < n; i++) {
-            this->data[i] = new T[m];
-            for (int j = 0; j < m; j++) {
-                this->data[i][j] = other.data[i][j];
+        Matrix<T> ans(this->n, this->m);
+
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                ans(i, j) = other(i, j);
             }
         }
-        return *this;
+        return ans;
     }
 
     Matrix<T> & operator = (Matrix <T> &&other) {
@@ -195,17 +192,16 @@ public:
     }
 
     Matrix<T> operator + (Matrix<T> const &other) const {
-        int n = other.get_dimensions().first, m = other.get_dimensions().second;
+        int n = other.getN(), m = other.getM();
         if (!(this->n == n && this->m == m)) {
             throw Matrix_exception("Sum is defined only for same dimensioned matrices.");
         }
-        T arr[this->n][this->m];
+        Matrix<T> ans(this->n, this->m);
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
-                arr[i][j] = this->data[i][j] + other.data[i][j];
+                ans(i, j) = this->data[i][j] + other(i, j);
             }
         }
-        Matrix ans(*arr, this->n, this->m);
         return ans;
     }
 
@@ -214,31 +210,29 @@ public:
     }
 
     Matrix<T> operator * (Matrix const &other) const {
-        int n = other.get_dimensions().first, m = other.get_dimensions().second;
-        if (this->m != n) {
+
+        Matrix<T> ans(n, other.getM());
+        if (m != other.getN()) {
             throw Matrix_exception("WARNING! The row length of the first matrix is not equal to the column length of the second one.");
         }
-        T arr[this->n][m];
-        for (int i = 0; i < this->n; i++) {
-            for (int j = 0; j < m; j++) {
-                arr[i][j] = 0;
-                for (int k = 0; k < this->m; k++) {
-                    arr[i][j] += this->data[i][k] * other.data[k][j];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < other.getM(); j++) {
+                ans(i, j) = 0;
+                for (int k = 0; k < m; k++) {
+                    ans(i, j) += (data[i][k] * other(k, j));
                 }
             }
         }
-        Matrix ans(*arr, this->n, m);
         return ans;
     }
 
     Matrix<T> operator * (double num) const {
-        T arr[this->n][this->m];
+        Matrix<T> ans(this->n, this->m);
         for (int i = 0; i < this->n; i++) {
             for (int j = 0; j < this->m; j++) {
-                arr[i][j] = this->data[i][j] * num;
+                ans(i, j) = this->data[i][j] * num;
             }
         }
-        Matrix ans(*arr, this->n, this->m);
         return ans;
     }
 
@@ -325,7 +319,7 @@ public:
 
     Matrix<T> get_submatrix(int start_str, int start_col, int n, int m) const {
         if (start_str < 0 || start_col < 0 || start_str + n >= this->n || start_col + m >= this->m) {
-            throw Matrix_exception("ERROR! Wrong dimentions.");
+            throw Matrix_exception("ERROR! Wrong dimentions");
         }
         T ans[n][m];
         for (int i = 0; i < n; i++) {
@@ -405,6 +399,25 @@ public:
         return ans;
     }
 
+    Matrix<T> makeL() const {
+        Matrix<T> L;
+        if (n != m) throw Matrix_exception("Warning! LU normally work only for square matrix");
+        for (auto i = 0; i < m; i++) {
+            for (auto j = i + 1; j < n; j++){
+                L(i, j) = data[i][j];
+            }
+        }
+        return L;
+    }
+
+    T norm() const {
+        T sum = 0;
+        for(size_t i = 0; i < m; ++i){
+            sum += data[1][i] * data[1][i];
+        }
+        return sqrt(sum);
+    }
+
     T determinant() const {
         if (!(this->is_square())) {
             throw Matrix_exception("WARNING! The determinant is defined only for square matrices.");
@@ -428,5 +441,53 @@ template <typename T>
 Matrix<T> operator * (double num, Matrix<T> const &M) {
      return M * num;
 }
+
+template <typename T>
+T norm(const Matrix<T>& a){
+    T sum = 0;
+    for(auto i = 0; i < a.getN(); ++i){
+        sum += a(1, i) * a(1, i);
+    }
+    return sqrt(sum);
+}
+
+template <typename T>
+class Matrix_U: public Matrix<T> {
+    public:
+        Matrix_U <T> (Matrix<T> A) {
+            this->n = A.getN();
+            this->m = A.getM();
+            this->data = new T*[this->n];
+            for (int i = 0; i < this->n; i++) {
+                this->data[i] = new T[this->m];
+            }
+            for (size_t i = 0; i < A.getN(); i++){
+                for (size_t j = 0; j < A.getM(); j++){
+                    if (i > j) this->data[i][j] = A(i, j);
+                    else this->data[i][j] = 0;
+                }
+            }
+        }
+    };
+
+template <typename T>
+class Matrix_L: public Matrix<T> {
+public:
+    Matrix_L <T> (Matrix<T> A) {
+        this->n = A.getN();
+        this->m = A.getM();
+        this->data = new T*[this->n];
+        for (int i = 0; i < this->n; i++) {
+            this->data[i] = new T[this->m];
+        }
+        for (size_t i = 0; i < A.getN(); i++){
+            for (size_t j = 0; j < A.getM(); j++){
+                if (i <= j) this->data[i][j] = A(i, j);
+                else this->data[i][j] = 0;
+            }
+        }
+    }
+};
+
 
 #endif //APPROXIMATION_MATRIX_H=

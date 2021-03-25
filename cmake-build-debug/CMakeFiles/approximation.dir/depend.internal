@@ -3,7 +3,10 @@
 
 CMakeFiles/approximation.dir/main.cpp.o
  /home/leeiozh/mipt/slae/approximation/back_gauss.h
+ /home/leeiozh/mipt/slae/approximation/chebishev.h
  /home/leeiozh/mipt/slae/approximation/gauss.h
+ /home/leeiozh/mipt/slae/approximation/gauss_zeidel.h
  /home/leeiozh/mipt/slae/approximation/head_gauss.h
  /home/leeiozh/mipt/slae/approximation/main.cpp
  /home/leeiozh/mipt/slae/approximation/matrix.h
+ /home/leeiozh/mipt/slae/approximation/simple_iteration.h

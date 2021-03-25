@@ -85,7 +85,13 @@
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/back_gauss.h">
 			<Option target="approximation"/>
 		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/chebishev.h">
+			<Option target="approximation"/>
+		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/gauss.h">
+			<Option target="approximation"/>
+		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/gauss_zeidel.h">
 			<Option target="approximation"/>
 		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/head_gauss.h">
@@ -95,6 +101,9 @@
 			<Option target="approximation"/>
 		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/matrix.h">
+			<Option target="approximation"/>
+		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/simple_iteration.h">
 			<Option target="approximation"/>
 		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/CMakeLists.txt">
