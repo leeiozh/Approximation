@@ -287,6 +287,22 @@ public:
         return this->data[i][j];
     }
 
+    T& operator()(int i) const {
+        if (this->n == 1) {
+            if (i >= m) {
+                throw Matrix_exception("WARNING! Array overflow");
+            }
+            return this->data[0][i];
+        }
+        if (this->m == 1) {
+            if (i >= n) {
+                throw Matrix_exception("WARNING! Array overflow");
+            }
+            return this->data[i][0];
+        }
+        throw Matrix_exception("WARNING! This matrix cannot be interrapted as a column or a raw.");
+    }
+    
     void swap(int i, int j) {
         if (!((i < this->n) && (j < this->n))) {
             throw Matrix_exception("WARNING! Wrong index. Swap error.");
