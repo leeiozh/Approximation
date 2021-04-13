@@ -67,13 +67,13 @@ int main() {
     }
 
     std::string approximation_table[7] = {"polynom", "best_polynom", "ln", "pow", "exp", "hyper", "top"};
-    std::map <std::string, std::string> settings = {{"Title"       , ""    },
-                                                    {"X_axis"      , ""    },
-                                                    {"Y_axis"      , ""    },
-                                                    {"Grid"        , "none"},
-                                                    {"Line_color"  , "blue"},
-                                                    {"Line_style"  , "-"   },
-                                                    {"Dot_color"   , "red" },
+    std::map <std::string, std::string> settings = {{"title"       , ""    },
+                                                    {"x_axis"      , ""    },
+                                                    {"y_axis"      , ""    },
+                                                    {"grid"        , "none"},
+                                                    {"line_color"  , "blue"},
+                                                    {"line_style"  , "-"   },
+                                                    {"lot_color"   , "red" },
                                                     {"polynom"     , "0"   },
                                                     {"best_polynom", "0"   },
                                                     {"ln"          , "0"   },
@@ -219,7 +219,7 @@ int main() {
                         }
                     }
                     //Matrix <long long double> matrix(*powers, m + 1, m + 1);
-                    //Вычисление аппроксимации многочленом степени m.
+                    //Р’С‹С‡РёСЃР»РµРЅРёРµ Р°РїРїСЂРѕРєСЃРёРјР°С†РёРё РјРЅРѕРіРѕС‡Р»РµРЅРѕРј СЃС‚РµРїРµРЅРё m.
                     curr = clock() - curr;
                     ftimelog << "Approximation by polynom " << m << "                    " << ((double)curr) / CLOCKS_PER_SEC << " sec\n";
                     flog << "Approximation by polynom:                    successful\n";
