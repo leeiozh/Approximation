@@ -88,13 +88,22 @@
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/chebishev.h">
 			<Option target="approximation"/>
 		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/csr.h">
+			<Option target="approximation"/>
+		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/gauss.h">
 			<Option target="approximation"/>
 		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/gauss_zeidel.h">
 			<Option target="approximation"/>
 		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/gmres.h">
+			<Option target="approximation"/>
+		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/head_gauss.h">
+			<Option target="approximation"/>
+		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/krylov.h">
 			<Option target="approximation"/>
 		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/main.cpp">

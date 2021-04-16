@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/approximation.dir/main.cpp.o  -o approximation 
+/usr/bin/c++ -g CMakeFiles/approximation.dir/main.cpp.o -o approximation 

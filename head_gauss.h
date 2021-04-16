@@ -43,7 +43,7 @@ int headTriangulation(Matrix<T> &A, Matrix<T> &b){
 
     for (auto i = 0; i < n; i++){
         auto i_max = col_max(A, i);
-        if (abs(A(i_max, i)) < tolerance) throw head_gauss_exception("Error: A is degenerate");
+        if (abs(A(i_max, i)) < tolerance<T>) throw head_gauss_exception("Error: A is degenerate");
         if (i != i_max){
             A.swap(i, i_max);
             b.swap(i, i_max);

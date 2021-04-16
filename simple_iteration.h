@@ -6,11 +6,11 @@
 #define APPROXIMATION_SIMPLE_ITERATION_H
 #include <vector>
 
-class simple_iteration_exeption: public std::exception{
+class simple_iteration_exception: public std::exception{
 public:
-    explicit simple_iteration_exeption(std::string r): reason_{std::move(r)}{}
+    explicit simple_iteration_exception(std::string r): reason_{std::move(r)}{}
 
-    char const* what() const noexcept {
+    char const* what() const noexcept override {
         return reason_.c_str();
     }
 private:
@@ -19,9 +19,10 @@ private:
 
 template<typename T>
 Matrix<T> simple_iteration(const Matrix<T>& A, const Matrix<T> &b, std::vector<T>& cheb_roots){
-    if (!A.is_square()) throw simple_iteration_exeption("Warning! Simple iteration can be used only for square matrix");
-    if (b.getM() != 1) throw simple_iteration_exeption("Error: b is not a one column");
-    if (A.getN() != b.getN()) throw simple_iteration_exeption("Warning! Matrix and free column must have same dimensions");
+    if (A(1, 2) != A(2, 1)) throw  simple_iteration_exception("Warning! Simple iteration method worked only with symmetric matrix ");
+    if (!A.is_square()) throw simple_iteration_exception("Warning! Simple iteration can be used only for square matrix");
+    if (b.getM() != 1) throw simple_iteration_exception("Error: b is not a one column");
+    if (A.getN() != b.getN()) throw simple_iteration_exception("Warning! Matrix and free column must have same dimensions");
 
     Matrix<T> x (A.getN(), 1);
     Matrix<T> r = b - A * x;
@@ -35,13 +36,12 @@ Matrix<T> simple_iteration(const Matrix<T>& A, const Matrix<T> &b, std::vector<T
             r = b - A * x;
             N = norm(r);
             ++i;
-            if (N < tolerance){
+            if (N < tolerance<T>){
                 flag = false;
                 break;
             }
         }
     }
-    std::cout << i <<"\n;";
     return x;
 }
 

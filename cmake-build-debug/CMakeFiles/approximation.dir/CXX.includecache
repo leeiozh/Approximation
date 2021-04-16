@@ -14,6 +14,16 @@ ctgmath
 vector
 -
 
+/home/leeiozh/mipt/slae/approximation/csr.h
+vector
+-
+set
+-
+algorithm
+-
+matrix.h
+/home/leeiozh/mipt/slae/approximation/matrix.h
+
 /home/leeiozh/mipt/slae/approximation/gauss.h
 exception
 -
@@ -21,10 +31,30 @@ back_gauss.h
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
 
 /home/leeiozh/mipt/slae/approximation/gauss_zeidel.h
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
+
+/home/leeiozh/mipt/slae/approximation/gmres.h
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
+back_gauss.h
+/home/leeiozh/mipt/slae/approximation/back_gauss.h
+krylov.h
+/home/leeiozh/mipt/slae/approximation/krylov.h
+vector
+-
 
 /home/leeiozh/mipt/slae/approximation/head_gauss.h
 back_gauss.h
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
+
+/home/leeiozh/mipt/slae/approximation/krylov.h
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
+tuple
+-
+vector
+-
 
 /home/leeiozh/mipt/slae/approximation/main.cpp
 iostream
@@ -41,12 +71,22 @@ chebishev.h
 /home/leeiozh/mipt/slae/approximation/chebishev.h
 gauss_zeidel.h
 /home/leeiozh/mipt/slae/approximation/gauss_zeidel.h
+gmres.h
+/home/leeiozh/mipt/slae/approximation/gmres.h
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
 
 /home/leeiozh/mipt/slae/approximation/matrix.h
 exception
 -
 cmath
 -
+vector
+-
+set
+-
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
 
 /home/leeiozh/mipt/slae/approximation/simple_iteration.h
 vector

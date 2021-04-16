@@ -18,15 +18,13 @@ private:
     std::string reason_;
 };
 
-double const tolerance = 1e-10;
-
 template<typename T>
 
 int col_non_zero(Matrix<T>& A, const int col){
-    if (abs(A(col, col) > tolerance)) return col;
+    if (abs(A(col, col) > tolerance<T>)) return col;
     else {
         for (auto i = col + 1; i < A.getN(); i++){
-            if (A(i, col) > tolerance) return i;
+            if (A(i, col) > tolerance<T>) return i;
         }
     }
     return col;
@@ -44,7 +42,7 @@ int triangulation(Matrix<T>& A, Matrix<T>& b){
 
     for (int i = 0; i < n - 1; i++){
         auto c = col_non_zero(A, i);
-        if (abs(A(c, i)) < tolerance) throw gauss_exception("Error: A is degenerate");
+        if (abs(A(c, i)) < tolerance<T>) throw gauss_exception("Error: A is degenerate");
         if (i != c){
             A.swap(i, c);
             b.swap(i, c);

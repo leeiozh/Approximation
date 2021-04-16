@@ -21,7 +21,7 @@ unsigned long long int C(int n, int k){
 
 template<typename T>
 std::vector<T> cheb_roots(std::pair<T, T> section, size_t pow_two){
-    size_t poly_order = std::pow(2, pow_two);
+    size_t poly_order = 1 << pow_two;
     std::vector<T> roots(poly_order);
     for(size_t i = 1; i <= poly_order; ++i){
         roots[i-1] = (section.first + section.second) / 2 + (section.second - section.first) / 2 * static_cast<T>(cos(static_cast<double>(2 * i - 1) * M_PI_2 / poly_order));
@@ -32,7 +32,7 @@ std::vector<T> cheb_roots(std::pair<T, T> section, size_t pow_two){
     std::vector<size_t> next_idx;
     size_t cur_order;
     for(size_t i = 1; i < pow_two; ++i){
-        cur_order = pow(2, double(i + 1));
+        cur_order = 1 << (i + 1);
         next_idx.resize(cur_order);
         for(size_t j = 0; j < cur_order - 1; j += 2){
             next_idx[j] = idx[j/2];
@@ -60,8 +60,8 @@ std::vector<T> cheb_coefs(std::pair<T, T> sec, size_t poly_order){
         for(size_t i = 0; i < k + 1; ++i){
             coefs_new[i] -= coefs_f[i];
             coefs_new[i + 1] += 2 * coefs_s[i];
-            if(abs(coefs_new[i]) < tolerance) coefs_new[i] = static_cast<T>(0);
-            if(abs(coefs_new[i + 1]) < tolerance) coefs_new[i] = static_cast<T>(0);
+            if(abs(coefs_new[i]) < tolerance<T>) coefs_new[i] = static_cast<T>(0);
+            if(abs(coefs_new[i + 1]) < tolerance<T>) coefs_new[i] = static_cast<T>(0);
         }
         coefs_f = coefs_s;
         coefs_s = coefs_new;

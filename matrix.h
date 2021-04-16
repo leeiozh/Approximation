@@ -2,6 +2,9 @@
 #define APPROXIMATION_MATRIX_H
 #include <exception>
 #include <cmath>
+#include <vector>
+#include <set>
+#include "csr.h"
 
 class Matrix_exception: public std::exception{
 public:
@@ -80,8 +83,6 @@ public:
         this->data = new T* [n];
         for (int i = 0; i < n; i++) {
             this->data[i] = new T[m];
-        }
-        for (int i = 0; i < n; i++){
             for (int j = 0; j < m; j++){
                 data[i][j] = 0;
             }
@@ -121,6 +122,24 @@ public:
         this->m = other.getM();
         this->data = other.data;
         other.data = nullptr;
+    }
+
+    Matrix<T> (std::vector<T> x): n(x.size()), m(1){
+        this->data = new T*[n];
+        for (auto i = 0; i < n; i++){
+            this->data[i] = new T[1];
+            data[i][0] = x[i];
+        }
+    }
+
+    Matrix<T> (size_t n, size_t m, std::set<Triplet<T>> inp): n(n), m(m){
+        this->data = new T* [n];
+        for (int i = 0; i < n; i++) {
+            this->data[i] = new T[m];
+        }
+        for (auto k : inp){
+            data[k.i][k.j] = k.value;
+        }
     }
 
     ~Matrix() {
@@ -173,6 +192,33 @@ public:
                 this->data[i][j] = filler;
             }
         }
+    }
+
+    void delete_last_row(){
+        delete[] data[n - 1];
+        n--;
+    }
+
+    std::vector<T> to_vector(){
+        std::vector<T> res;
+        res.resize(n);
+        for (int i = 0; i < n; i++){
+            res[i] = data[i][0];
+        }
+        return res;
+    }
+
+    CSR<T> to_csr(){
+        std::set<Triplet<T>> tripl;
+        for (size_t i = 0; i < n; i++){
+            for (size_t j = 0; j < m; j++){
+                if (tolerance<double> < data[i][j]){
+                    tripl.insert(Triplet<double> {i, j, data[i][j]});
+                }
+            }
+        }
+        CSR<T> res(n, m, tripl);
+        return res;
     }
 
     void resize(int n, int m) {
@@ -282,7 +328,7 @@ public:
 
     T& operator()(int i, int j) const {
         if (i < 0 || i >= this->n || j < 0 || j >=  this->m) {
-            throw Matrix_exception("WARNING! Array overflow");
+            throw Matrix_exception("WARNING! Index is out of range");
         }
         return this->data[i][j];
     }
@@ -300,7 +346,7 @@ public:
             }
             return this->data[i][0];
         }
-        throw Matrix_exception("WARNING! This matrix cannot be interrapted as a column or a raw.");
+        throw Matrix_exception("WARNING! This matrix cannot be interrupted as a column or a raw.");
     }
     
     void swap(int i, int j) {
@@ -462,7 +508,7 @@ template <typename T>
 T norm(const Matrix<T>& a){
     T sum = 0;
     for(auto i = 0; i < a.getN(); ++i){
-        sum += a(1, i) * a(1, i);
+        sum += a(i, 0) * a(i, 0);
     }
     return sqrt(sum);
 }
