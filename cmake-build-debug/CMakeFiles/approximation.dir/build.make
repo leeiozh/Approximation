@@ -76,27 +76,27 @@ include CMakeFiles/approximation.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/approximation.dir/flags.make
 
-CMakeFiles/approximation.dir/main.cpp.o: CMakeFiles/approximation.dir/flags.make
-CMakeFiles/approximation.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leeiozh/mipt/slae/approximation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/approximation.dir/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/approximation.dir/main.cpp.o -c /home/leeiozh/mipt/slae/approximation/main.cpp
+CMakeFiles/approximation.dir/SLAE_test.cpp.o: CMakeFiles/approximation.dir/flags.make
+CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../SLAE_test.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/leeiozh/mipt/slae/approximation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/approximation.dir/SLAE_test.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/approximation.dir/SLAE_test.cpp.o -c /home/leeiozh/mipt/slae/approximation/SLAE_test.cpp
 
-CMakeFiles/approximation.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/approximation.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leeiozh/mipt/slae/approximation/main.cpp > CMakeFiles/approximation.dir/main.cpp.i
+CMakeFiles/approximation.dir/SLAE_test.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/approximation.dir/SLAE_test.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/leeiozh/mipt/slae/approximation/SLAE_test.cpp > CMakeFiles/approximation.dir/SLAE_test.cpp.i
 
-CMakeFiles/approximation.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/approximation.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leeiozh/mipt/slae/approximation/main.cpp -o CMakeFiles/approximation.dir/main.cpp.s
+CMakeFiles/approximation.dir/SLAE_test.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/approximation.dir/SLAE_test.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/leeiozh/mipt/slae/approximation/SLAE_test.cpp -o CMakeFiles/approximation.dir/SLAE_test.cpp.s
 
 # Object files for target approximation
 approximation_OBJECTS = \
-"CMakeFiles/approximation.dir/main.cpp.o"
+"CMakeFiles/approximation.dir/SLAE_test.cpp.o"
 
 # External object files for target approximation
 approximation_EXTERNAL_OBJECTS =
 
-approximation: CMakeFiles/approximation.dir/main.cpp.o
+approximation: CMakeFiles/approximation.dir/SLAE_test.cpp.o
 approximation: CMakeFiles/approximation.dir/build.make
 approximation: CMakeFiles/approximation.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/leeiozh/mipt/slae/approximation/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable approximation"

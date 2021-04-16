@@ -84,7 +84,7 @@ public:
         for (int i = 0; i < n; i++) {
             this->data[i] = new T[m];
             for (int j = 0; j < m; j++){
-                data[i][j] = 0;
+                this->data[i][j] = 0;
             }
         }
     }
@@ -151,18 +151,40 @@ public:
         }
     }
 
-    Matrix<T> & operator = (Matrix <T> &other) {
+    Matrix<T> & operator = (const Matrix <T> &other) {
         if (&other == this) {
             return *this;
         }
-        Matrix<T> ans(this->n, this->m);
+        if (data != nullptr) {
+            for (int i = 0; i < n; i++){
+                delete[] data[i];
+            }
+            delete[] data;
+        }
+
+        n = other.n;
+        m = other.m;
+
+        this->data = new T* [n];
+        for (int i = 0; i < n; i++) {
+            this->data[i] = new T[m];
+        }
 
         for (int i = 0; i < n; i++){
             for (int j = 0; j < m; j++){
-                ans(i, j) = other(i, j);
+                (*this)(i, j) = other(i, j);
             }
         }
-        return ans;
+        return *this;
+    }
+
+    Matrix<T> & operator += (const Matrix <T> &other) {
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                data[i][j] += other(i, j);
+            }
+        }
+        return *this;
     }
 
     Matrix<T> & operator = (Matrix <T> &&other) {
@@ -201,9 +223,9 @@ public:
 
     std::vector<T> to_vector(){
         std::vector<T> res;
-        res.resize(n);
+        res.resize(this->n);
         for (int i = 0; i < n; i++){
-            res[i] = data[i][0];
+            res[i] = this->data[i][0];
         }
         return res;
     }
@@ -238,8 +260,7 @@ public:
     }
 
     Matrix<T> operator + (Matrix<T> const &other) const {
-        int n = other.getN(), m = other.getM();
-        if (!(this->n == n && this->m == m)) {
+        if (!(this->n == other.getN() && this->m == other.getM())) {
             throw Matrix_exception("Sum is defined only for same dimensioned matrices.");
         }
         Matrix<T> ans(this->n, this->m);
@@ -280,6 +301,18 @@ public:
             }
         }
         return ans;
+    }
+
+    std::vector<T> operator * (std::vector<T> v) {
+        std::vector<T> res(v.size());
+        for (int i = 0; i < n; i++){
+            T sum = 0;
+            for (int j = 0; j < m; j++){
+                sum += data[i][j] * v[j];
+            }
+            res[i] = sum;
+        }
+        return res;
     }
 
     Matrix<T> operator / (double num) const {

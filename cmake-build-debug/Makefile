@@ -142,32 +142,32 @@ approximation/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/build
 .PHONY : approximation/fast
 
-main.o: main.cpp.o
+SLAE_test.o: SLAE_test.cpp.o
 
-.PHONY : main.o
+.PHONY : SLAE_test.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/main.cpp.o
-.PHONY : main.cpp.o
+SLAE_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/SLAE_test.cpp.o
+.PHONY : SLAE_test.cpp.o
 
-main.i: main.cpp.i
+SLAE_test.i: SLAE_test.cpp.i
 
-.PHONY : main.i
+.PHONY : SLAE_test.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/main.cpp.i
-.PHONY : main.cpp.i
+SLAE_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/SLAE_test.cpp.i
+.PHONY : SLAE_test.cpp.i
 
-main.s: main.cpp.s
+SLAE_test.s: SLAE_test.cpp.s
 
-.PHONY : main.s
+.PHONY : SLAE_test.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/main.cpp.s
-.PHONY : main.cpp.s
+SLAE_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/approximation.dir/build.make CMakeFiles/approximation.dir/SLAE_test.cpp.s
+.PHONY : SLAE_test.cpp.s
 
 # Help Target
 help:
@@ -178,9 +178,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... approximation"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... SLAE_test.o"
+	@echo "... SLAE_test.i"
+	@echo "... SLAE_test.s"
 .PHONY : help
 
 

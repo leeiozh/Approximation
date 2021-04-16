@@ -29,5 +29,6 @@ int main() {
 
     Matrix<double> best(b);
     std::cout << gmres(test, best);
+    delete [] arr;
 }
 

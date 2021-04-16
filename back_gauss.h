@@ -24,7 +24,7 @@ Matrix<T> back_gauss(Matrix<T>& A, Matrix<T>& b){
 }
 
 template<typename T>
-Matrix<T> back_subst_top_triangular(const Matrix<T>& A, const std::vector<T>& b){
+std::vector<T> back_subst_top_triangular(const Matrix<T>& A, const std::vector<T>& b){
     std::vector<T> res(b.size());
     res.back() = b.back()/A(A.getN()-1, A.getM()-1);
     T sum;
@@ -35,7 +35,7 @@ Matrix<T> back_subst_top_triangular(const Matrix<T>& A, const std::vector<T>& b)
         }
         res[i] = (b[i] - sum) / A(i, i);
     }
-    return Matrix<T>(res);
+    return res;
 }
 
 template<typename T>

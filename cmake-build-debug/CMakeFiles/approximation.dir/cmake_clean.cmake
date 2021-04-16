@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/approximation.dir/main.cpp.o"
+  "CMakeFiles/approximation.dir/SLAE_test.cpp.o"
   "approximation"
   "approximation.pdb"
 )

@@ -64,37 +64,6 @@ public:
         }
     }
 
-    /*CSR(const Matrix<T> &A): H(A.getM()), W(A.getN()){
-        std::set<Triplet<elm_t>> in;
-        for (size_t i = 0; i < H; i++){
-            for (size_t j = 0; j < W; j++){
-                if (tolerance < Tabs(A(i, j))){
-                    in.insert(Triplet<T> {i, j, A(i, j)});
-                }
-            }
-        }
-        values.resize(in.size());
-        cols.resize(in.size());
-        rows.resize(H + 1);
-        int countInRow = 0;
-        int currRow = 0;
-        auto it = in.begin();
-        for(idx_t k = 0; k < in.size(); ++k){
-            while(currRow < it->i){
-                rows[currRow+1] = rows[currRow] + countInRow;
-                ++currRow;
-                countInRow = 0;
-            }
-            values[k] = it->value;
-            cols[k] = it->j;
-            ++countInRow;
-            it = next(it);
-        }
-        for(++currRow; currRow <= H; ++currRow){
-            rows[currRow] = in.size();
-        }
-    }*/
-
     CSR(const idx_t &h, const idx_t &w, T* arr): H(h), W(w){
         std::set<Triplet<elm_t>> in;
         for (size_t i = 0; i < H; i++){
@@ -181,6 +150,20 @@ std::ostream& operator<<(std::ostream& os, const CSR<T>& A){
         os<<std::endl;
     }
     return os;
+}
+
+template<typename T>
+std::vector<T> operator *(const CSR<T>& A, std::vector<T> v){
+    return v * A;
+}
+
+template<typename T>
+std::vector<T> operator +(std::vector<T> v1, std::vector<T> v2){
+    std::vector<T> res(v1.size());
+    for (int i = 0; i < v1.size(); i++){
+        res[i] = v1[i] + v2[i];
+    }
+    return res;
 }
 
 #endif //APPROXIMATION_CSR_H

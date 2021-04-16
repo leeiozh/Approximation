@@ -11,10 +11,12 @@
 #include <vector>
 
 template<typename T>
-Matrix<T> gmres(Matrix<T>& input, const Matrix<T>& b){
-    CSR<T> A = input.to_csr();
-    Matrix<T> x(b.getN(), 1);
-    Matrix<T> r = b - (A * x.to_vector());
+Matrix<T> gmres(Matrix<T>& input_A, Matrix<T>& input_b){
+    std::vector<T> b = input_b.to_vector();
+    CSR<T> A = input_A.to_csr();
+    std::vector<T> x(b.size());
+    std::vector<T> r = b - A * x;
+
     int m = A.sizeW();
     T N = norm(r);
     std::vector<T> B;
@@ -24,13 +26,16 @@ Matrix<T> gmres(Matrix<T>& input, const Matrix<T>& b){
             B.resize(i, 0);
             B[0] = N;
 
-            auto [V, H] = KrylovSubSpace(A, r.to_vector(), i);
+            auto [V, H] = KrylovSubSpace(A, r, i);
             HessenbergRot(H, B);
             if (Tabs(B.back()) < tolerance<T> || i == m + 1){
                 H.delete_last_row();
                 B.pop_back();
+
                 x = x + V * back_subst_top_triangular(H, B);
-                r = b - A * x.to_vector();
+
+                r = b - A * x;
+
                 N = norm(r);
                 B.clear();
                 break;

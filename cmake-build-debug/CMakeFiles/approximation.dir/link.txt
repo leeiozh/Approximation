@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/approximation.dir/main.cpp.o -o approximation 
+/usr/bin/c++ -fsanitize=address -g CMakeFiles/approximation.dir/SLAE_test.cpp.o -o approximation 
