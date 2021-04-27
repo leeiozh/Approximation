@@ -6,65 +6,59 @@
 #define APPROXIMATION_HEAD_GAUSS_H
 #include "back_gauss.h"
 
-class head_gauss_exception: public std::exception{
-public:
-    explicit head_gauss_exception(std::string r): reason_{std::move(r)}{}
-
-    char const* what() const noexcept {
-        return reason_.c_str();
-    }
-private:
-    std::string reason_;
-};
-
 template<typename T>
-
-int col_max(Matrix<T> &A, int& col){
-    auto max = abs(A(col, col));
-    int max_pos = col;
-    for (auto i = col + 1; i < A.getN(); i++){
-        auto curr = abs(A(i, col));
-        if (curr > max) {
-            max = curr;
-            max_pos = i;
+typename Vmatrix<T>::idx_t col_max(const Vmatrix<T> &A, const typename Vmatrix<T>::idx_t& col) {
+    using idx_t = typename Vmatrix<T>::idx_t;
+    using elm_t = typename Vmatrix<T>::elm_t;
+    elm_t max = Tabs(A(col,col));
+    int maxPos = col;
+    for (idx_t i = col+1; i < A.sizeH(); ++i) {
+        elm_t element = Tabs(A(i, col));
+        if (element > max) {
+            max = element;
+            maxPos = i;
         }
     }
-    return max_pos;
+    return maxPos;
 }
 
 template <typename T>
-int headTriangulation(Matrix<T> &A, Matrix<T> &b){
-    if (!A.is_square()) throw head_gauss_exception("Warning! Gauss method can be used only for square matrix");
-    if (b.getM() != 1) throw head_gauss_exception("Error: b is not a one column");
-    if (A.getN() != b.getN()) throw head_gauss_exception("Warning! Matrix and free column must have same dimensions");
+unsigned int headTriangulation(Vmatrix<T> &A, std::vector<T> &b) {
 
-    int swapCount = 0;
-    int n = A.getN();
+    using idx_t = typename Vmatrix<T>::idx_t;
+    using elm_t = typename Vmatrix<T>::elm_t;
 
-    for (auto i = 0; i < n; i++){
-        auto i_max = col_max(A, i);
-        if (abs(A(i_max, i)) < tolerance<T>) throw head_gauss_exception("Error: A is degenerate");
-        if (i != i_max){
-            A.swap(i, i_max);
-            b.swap(i, i_max);
-            swapCount++;
-        }
+    unsigned int swapCount = 0;
 
-        for (auto k = i + 1; k < n; k++){
-            auto coeff = A(k, i) / A(i, i);
-            for (auto j = i; j < n; j++){
-                A(k, j) -= A(i, i) * coeff;
+    for (idx_t i = 0; i < A.sizeH()-1; ++i) {
+        idx_t imax = col_max(A, i);
+        if(Tabs(A(imax, i)) < tolerance<T>){
+            continue;
+        }else {
+            if (i != imax) {
+                A.swap(i, imax);
+                std::swap(b[i], b[imax]);
+                ++swapCount;
             }
-            b(k, 0)-= b(i, 0) * coeff;
+
+            for (idx_t k = i + 1; k < A.sizeH(); ++k) {
+                elm_t coef = (A(k, i) / A(i, i));
+                for (idx_t j = i; j < A.sizeW(); ++j) {
+                    A(k, j) -= A(i, j) * coef;
+                }
+                b[k] -= b[i] * coef;
+            }
         }
     }
     return swapCount;
 }
 
 template <typename T>
-Matrix<T> head_gauss(Matrix<T> &A, Matrix<T> &b){
+std::vector<T> head_gauss(Vmatrix<T> A, std::vector<T> b) {
+
     headTriangulation(A, b);
-    return back_gauss(A, b);
+    return back_subst_top_triangular(A, b);
 }
+
 
 #endif //APPROXIMATION_HEAD_GAUSS_H

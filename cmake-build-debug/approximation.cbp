@@ -89,6 +89,9 @@
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/SLAE_test.cpp">
 			<Option target="approximation"/>
 		</Unit>
+		<Unit filename="/home/leeiozh/mipt/slae/approximation/Vmatrix.h">
+			<Option target="approximation"/>
+		</Unit>
 		<Unit filename="/home/leeiozh/mipt/slae/approximation/back_gauss.h">
 			<Option target="approximation"/>
 		</Unit>

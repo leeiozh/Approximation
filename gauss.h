@@ -5,65 +5,45 @@
 #ifndef APPROXIMATION_GAUSS_H
 #define APPROXIMATION_GAUSS_H
 #include <exception>
+#include <vector>
+#include "Vmatrix.h"
 #include "back_gauss.h"
 
-class gauss_exception: public std::exception{
-public:
-    explicit gauss_exception(std::string r): reason_{std::move(r)}{}
-
-    char const* what() const noexcept {
-        return reason_.c_str();
-    }
-private:
-    std::string reason_;
-};
-
 template<typename T>
-
-int col_non_zero(Matrix<T>& A, const int col){
-    if (abs(A(col, col) > tolerance<T>)) return col;
+typename Vmatrix<T>::idx_t col_nonzero(const Vmatrix<T>& A, const typename Vmatrix<T>::idx_t& col){
+    if(Tabs(A(col, col)) > tolerance<T>) return col;
     else {
-        for (auto i = col + 1; i < A.getN(); i++){
-            if (A(i, col) > tolerance<T>) return i;
+        for(auto i = col + 1; i < A.sizeH(); ++i){
+            if(Tabs( A(i, col) ) > tolerance<T>) return i;
         }
     }
     return col;
 }
 
 template<typename T>
+void triangulation(Vmatrix<T>& A, std::vector<T>& b){
+    using idx_t = typename Vmatrix<T>::idx_t;
+    using elm_t = typename Vmatrix<T>::elm_t;
 
-int triangulation(Matrix<T>& A, Matrix<T>& b){
-    if (!A.is_square()) throw gauss_exception("Warning! Gauss method can be used only for square matrix");
-    if (b.getM() != 1) throw gauss_exception("Error: b is not a one column");
-    if (A.getN() != b.getN()) throw gauss_exception("Warning! Matrix and free column must have same dimensions");
-
-    int swap_count = 0;
-    int n = A.getN();
-
-    for (int i = 0; i < n - 1; i++){
-        auto c = col_non_zero(A, i);
-        if (abs(A(c, i)) < tolerance<T>) throw gauss_exception("Error: A is degenerate");
-        if (i != c){
-            A.swap(i, c);
-            b.swap(i, c);
-            swap_count++;
+    for(idx_t i = 0; i < A.sizeH()-1; ++i){
+        idx_t iNonZero = col_nonzero(A, i);
+        if(Tabs(A(iNonZero, i)) > tolerance<T>){
+            A.swap(i, iNonZero);
+            std::swap(b[i], b[iNonZero]);
         }
-        for (int k = i + 1; k < n; k++){
-            auto coeff = A(k, i)/ A(i, i);
-            for (auto s = 0; s < n; s++){
-                A(k, s) -= A(i, s) * coeff;
+        for(idx_t k = i + 1; k < A.sizeH(); ++k){
+            elm_t coef = A(k, i) / A(i, i);
+            for(idx_t j = 0; j < A.sizeW(); ++j){
+                A(k, j) -= A(i, j) * coef;
             }
-            b(k, 0) -= b(i, 0) * coeff;
+            b[k] -= b[i] * coef;
         }
     }
-    return swap_count;
 }
-
 template<typename T>
-
-Matrix<T> gauss(Matrix<T> &A, Matrix<T> &b){
+std::vector<T> gauss(Vmatrix<T> A, std::vector<T> b){
     triangulation(A, b);
-    return back_gauss(A, b);
+    return back_subst_top_triangular(A, b);
 }
 
 #endif //APPROXIMATION_GAUSS_H

@@ -5,6 +5,7 @@
 #ifndef APPROXIMATION_SIMPLE_ITERATION_H
 #define APPROXIMATION_SIMPLE_ITERATION_H
 #include <vector>
+#include "csr.h"
 
 class simple_iteration_exception: public std::exception{
 public:
@@ -18,31 +19,28 @@ private:
 };
 
 template<typename T>
-Matrix<T> simple_iteration(const Matrix<T>& A, const Matrix<T> &b, std::vector<T>& cheb_roots){
-    if (A(1, 2) != A(2, 1)) throw  simple_iteration_exception("Warning! Simple iteration method worked only with symmetric matrix ");
-    if (!A.is_square()) throw simple_iteration_exception("Warning! Simple iteration can be used only for square matrix");
-    if (b.getM() != 1) throw simple_iteration_exception("Error: b is not a one column");
-    if (A.getN() != b.getN()) throw simple_iteration_exception("Warning! Matrix and free column must have same dimensions");
-
-    Matrix<T> x (A.getN(), 1);
-    Matrix<T> r = b - A * x;
+std::vector<T> simple_iteration(const CSR<T>& A, const std::vector<T>& b, const std::vector<T>& ChebRoots){
+    std::vector<T> x(b.size());
+    std::vector<T> r = b - A * x;
 
     T N = norm(r);
     bool flag = true;
-    int i = 0;
-    while (flag) {
-        for (auto root: cheb_roots){
-            x = x - r / root;
+    int i =0;
+    while(flag){
+        for(auto root : ChebRoots){
+            x = -static_cast<T>(1)/root * r + x;
             r = b - A * x;
             N = norm(r);
             ++i;
-            if (N < tolerance<T>){
+            if( N < tolerance<T>){
                 flag = false;
                 break;
             }
         }
     }
+    std::cout<<i<<std::endl;
     return x;
 }
+
 
 #endif //APPROXIMATION_SIMPLE_ITERATION_H

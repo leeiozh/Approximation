@@ -1,5 +1,5 @@
 #include <iostream>
-#include "matrix.h"
+#include "Vmatrix.h"
 #include "gauss.h"
 #include "head_gauss.h"
 #include "simple_iteration.h"
@@ -9,17 +9,26 @@
 #include "csr.h"
 
 int main() {
-
     int n, m;
+
     std::cin >> n >> m;
+    std::vector<double> v;
+    v.resize(n * m);
 
-    double *arr = new double [m * n];
-
-    for (int i = 0; i < n * m; ++i){
-        std::cin >> arr[i];
+    for (int i = 0; i < n * m; i++){
+        std::cin >> v[i];
     }
 
-    Matrix<double> test(arr, n, m);
+    /*std::set<Triplet<double>> in;
+    for (size_t i = 0; i < n; i++){
+        for (size_t j = 0; j < m; j++){
+            double tmp;
+            std::cin >> tmp;
+            if (tolerance<double> < tmp){
+                in.insert(Triplet<double> {i, j, tmp});
+            }
+        }
+    }*/
 
     std::vector<double> b;
     b.resize(n);
@@ -27,8 +36,8 @@ int main() {
         std::cin >> b[i];
     }
 
-    Matrix<double> best(b);
-    std::cout << gmres(test, best);
-    delete [] arr;
+    Vmatrix<double> test(n, m, v);
+
+    std::cout << head_gauss(Vmatrix<double>(test), b);
 }
 

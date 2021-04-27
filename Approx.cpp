@@ -302,7 +302,7 @@ int main() {
                     break;
                 }
                 double y = data_y[j], ln_x = log(data_x[j]);
-                sum_y_lnx += y*ln_x;
+                sum_y_lnx += y * ln_x;
                 sum_lnx += ln_x;
                 sum_y += y;
                 sum_lnx2 += ln_x*ln_x;

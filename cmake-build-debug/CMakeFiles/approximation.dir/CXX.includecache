@@ -9,8 +9,8 @@
 /home/leeiozh/mipt/slae/approximation/SLAE_test.cpp
 iostream
 -
-matrix.h
-/home/leeiozh/mipt/slae/approximation/matrix.h
+Vmatrix.h
+/home/leeiozh/mipt/slae/approximation/Vmatrix.h
 gauss.h
 /home/leeiozh/mipt/slae/approximation/gauss.h
 head_gauss.h
@@ -26,6 +26,14 @@ gmres.h
 csr.h
 /home/leeiozh/mipt/slae/approximation/csr.h
 
+/home/leeiozh/mipt/slae/approximation/Vmatrix.h
+vector
+-
+set
+-
+math.h
+/home/leeiozh/mipt/slae/approximation/math.h
+
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
 
 /home/leeiozh/mipt/slae/approximation/chebishev.h
@@ -35,18 +43,14 @@ vector
 -
 
 /home/leeiozh/mipt/slae/approximation/csr.h
-vector
--
-set
--
-algorithm
--
-matrix.h
-/home/leeiozh/mipt/slae/approximation/matrix.h
 
 /home/leeiozh/mipt/slae/approximation/gauss.h
 exception
 -
+vector
+-
+Vmatrix.h
+/home/leeiozh/mipt/slae/approximation/Vmatrix.h
 back_gauss.h
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
 
@@ -76,19 +80,9 @@ tuple
 vector
 -
 
-/home/leeiozh/mipt/slae/approximation/matrix.h
-exception
--
-cmath
--
-vector
--
-set
--
-csr.h
-/home/leeiozh/mipt/slae/approximation/csr.h
-
 /home/leeiozh/mipt/slae/approximation/simple_iteration.h
 vector
 -
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
 

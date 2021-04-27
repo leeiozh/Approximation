@@ -8,10 +8,11 @@
 #include "csr.h"
 
 template<typename T>
-Matrix<T> gauss_zeidel(const CSR<T>& A, const Matrix<T>& b){
+std::vector<T> GaussSeidel(const CSR<T>& A, const std::vector<T>& b){
+    using idx_t = typename CSR<T>::idx_t ;
 
-    Matrix<T> r(b.getN(), 1);
-    Matrix<T> x(b.getN(), 1);
+    std::vector<T> r(b.size());
+    std::vector<T> x(b.size());
 
     T sum;
     r = A * x - b;
@@ -19,7 +20,7 @@ Matrix<T> gauss_zeidel(const CSR<T>& A, const Matrix<T>& b){
     while(norm(r) > tolerance<T>){
         for(size_t i = 0; i < A.H; ++i){
             sum = 0;
-            for(size_t j = A.rows[i]; j < A.rows[i+1]; ++j){
+            for(idx_t j = A.rows[i]; j < A.rows[i+1]; ++j){
                 if( i != A.cols[j] ) sum += A.values[j] * x[A.cols[j]];
                 else continue;
             }
@@ -28,8 +29,7 @@ Matrix<T> gauss_zeidel(const CSR<T>& A, const Matrix<T>& b){
         r = A * x - b;
         it++;
     }
-    // std::cout << it <<"\n";
+    std::cout<<it<<std::endl;
     return x;
 }
-
 #endif //APPROXIMATION_GAUSS_ZEIDEL_H
