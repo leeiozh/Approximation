@@ -5,11 +5,6 @@ CMakeFiles/approximation.dir/SLAE_test.cpp.o
  /home/leeiozh/mipt/slae/approximation/SLAE_test.cpp
  /home/leeiozh/mipt/slae/approximation/Vmatrix.h
  /home/leeiozh/mipt/slae/approximation/back_gauss.h
- /home/leeiozh/mipt/slae/approximation/chebishev.h
  /home/leeiozh/mipt/slae/approximation/csr.h
- /home/leeiozh/mipt/slae/approximation/gauss.h
- /home/leeiozh/mipt/slae/approximation/gauss_zeidel.h
  /home/leeiozh/mipt/slae/approximation/gmres.h
- /home/leeiozh/mipt/slae/approximation/head_gauss.h
  /home/leeiozh/mipt/slae/approximation/krylov.h
- /home/leeiozh/mipt/slae/approximation/simple_iteration.h

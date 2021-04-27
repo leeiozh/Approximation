@@ -155,7 +155,7 @@ std::vector<T> operator*(const T& k, const std::vector<T>& b){
 
 template<typename T>
 T operator*(const std::vector<T>& a, const std::vector<T>& b){
-    if (a.size() != b.size) {
+    if (a.size() != b.size()) {
         throw Vmatrix_exception("ERROR! Expected same dimensions.");
     }
     T sum = 0;
@@ -167,12 +167,19 @@ T operator*(const std::vector<T>& a, const std::vector<T>& b){
 
 template<typename T>
 std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b){
-    return a + (-1) * b;
+    if (a.size() != b.size()) {
+        throw Vmatrix_exception("ERROR! Expected same dimensions.");
+    }
+    std::vector<T> res(a.size());
+    for(size_t i = 0; i < a.size(); ++i){
+        res[i] = a[i] - b[i];
+    }
+    return res;
 }
 
 template<typename T>
 std::vector<T> operator+(const std::vector<T>& a, const std::vector<T>& b){
-    if (a.size() != b.size) {
+    if (a.size() != b.size()) {
         throw Vmatrix_exception("ERROR! Expected same dimensions.");
     }
     std::vector<T> res(a.size());

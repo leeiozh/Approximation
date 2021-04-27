@@ -4,12 +4,7 @@
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../SLAE_test.cpp
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../Vmatrix.h
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../back_gauss.h
-CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../chebishev.h
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../csr.h
-CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../gauss.h
-CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../gauss_zeidel.h
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../gmres.h
-CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../head_gauss.h
 CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../krylov.h
-CMakeFiles/approximation.dir/SLAE_test.cpp.o: ../simple_iteration.h
 
