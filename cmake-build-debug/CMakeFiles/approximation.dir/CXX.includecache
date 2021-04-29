@@ -23,10 +23,16 @@ set
 -
 math.h
 /home/leeiozh/mipt/slae/approximation/math.h
+csr.h
+/home/leeiozh/mipt/slae/approximation/csr.h
 
 /home/leeiozh/mipt/slae/approximation/back_gauss.h
 
 /home/leeiozh/mipt/slae/approximation/csr.h
+Vmatrix.h
+/home/leeiozh/mipt/slae/approximation/Vmatrix.h
+set
+-
 
 /home/leeiozh/mipt/slae/approximation/gmres.h
 csr.h

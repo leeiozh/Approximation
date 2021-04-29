@@ -9,6 +9,8 @@
 #include "Vmatrix.h"
 #include "back_gauss.h"
 
+
+
 template<typename T>
 typename Vmatrix<T>::idx_t col_nonzero(const Vmatrix<T>& A, const typename Vmatrix<T>::idx_t& col){
     if(Tabs(A(col, col)) > tolerance<T>) return col;

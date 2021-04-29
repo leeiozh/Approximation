@@ -7,6 +7,7 @@
 #include <vector>
 #include <set>
 #include "math.h"
+#include "csr.h"
 
 class Vmatrix_exception: public std::exception{
 public:
@@ -17,16 +18,6 @@ public:
     }
 private:
     std::string reason_;
-};
-
-template<typename T>
-struct Triplet{
-    std::size_t i;
-    std::size_t j;
-    T value;
-    bool operator<(Triplet<T> const & rgh) const{
-        return this->i<rgh.i || (this->i == rgh.i && this->j < rgh.j);
-    }
 };
 
 template<typename T>
@@ -124,9 +115,6 @@ std::ostream& operator<<(std::ostream& os, const Vmatrix<T>& A){
     }
     return os;
 }
-
-template<typename T>
-auto tolerance = static_cast<T>(1e-10);
 
 template<typename T>
 T Tabs(const T& a){

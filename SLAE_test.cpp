@@ -8,18 +8,13 @@ int main() {
 
     std::cin >> n >> m;
 
-    std::set<Triplet<double>> in;
-    for (size_t i = 0; i < n; i++){
-        for (size_t j = 0; j < m; j++){
-            double tmp;
-            std::cin >> tmp;
-            if (tolerance<double> < tmp){
-                in.insert(Triplet<double> {i, j, tmp});
-            }
-        }
+    auto* arr = new double [9];
+
+    for (int i = 0; i < n * m; i++){
+        std::cin >> arr[i];
     }
 
-    CSR<double> matr(n, m, in);
+    CSR<double> matr(n, m, to_csr(arr, n, m));
 
     std::vector<double> b(n);
     for (int i = 0; i < n; i++) {

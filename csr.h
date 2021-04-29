@@ -4,6 +4,21 @@
 
 #ifndef APPROXIMATION_CSR_H
 #define APPROXIMATION_CSR_H
+#include "Vmatrix.h"
+#include <set>
+
+template<typename T>
+struct Triplet{
+    std::size_t i;
+    std::size_t j;
+    T value;
+    bool operator<(Triplet<T> const & rgh) const{
+        return this->i<rgh.i || (this->i == rgh.i && this->j < rgh.j);
+    }
+};
+
+template<typename T>
+auto tolerance = static_cast<T>(1e-10);
 
 template<typename T>
 class CSR{
@@ -15,9 +30,6 @@ private:
     std::vector<elm_t> values;
     std::vector<idx_t> cols;
     std::vector<idx_t> rows;
-
-    template<typename Y>
-    friend std::vector<Y> gauss_zeidel(const CSR<Y>& A, const std::vector<Y>& b);
 
 public:
     CSR(const idx_t &h, const idx_t &w, const std::set<Triplet<elm_t>>& in): H(h), W(w){
@@ -77,6 +89,19 @@ std::ostream& operator<<(std::ostream& os, const CSR<T>& A){
         os<<std::endl;
     }
     return os;
+}
+
+template<typename T>
+std::set<Triplet<T>> to_csr (T* arr, int n, int m) {
+    std::set<Triplet<T>> in;
+    for (size_t i = 0; i < n; i++){
+        for (size_t j = 0; j < m; j++){
+            if (tolerance<T> < arr[i * n + j]){
+                in.insert(Triplet<T> {i, j, arr[i * n + j]});
+            }
+        }
+    }
+    return in;
 }
 
 #endif //APPROXIMATION_CSR_H
