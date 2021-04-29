@@ -1,4 +1,7 @@
-//#include "matrix.h"
+#include "Sources\\.h\\matrix.h"
+#include "Sources\\.h\\polynom.h"
+#include "Sources\\.h\\gauss.h"
+//#include "Sources\\.h\\head_gauss.h"
 
 #include <iostream>
 #include <sstream>
@@ -73,7 +76,7 @@ int main() {
                                                     {"grid"        , "none"},
                                                     {"line_color"  , "blue"},
                                                     {"line_style"  , "-"   },
-                                                    {"lot_color"   , "red" },
+                                                    {"dot_color"   , "red" },
                                                     {"polynom"     , "0"   },
                                                     {"best_polynom", "0"   },
                                                     {"ln"          , "0"   },
@@ -106,7 +109,7 @@ int main() {
         }
         if (settings.find(key) != settings.end() || key == "all") {
             if (key == "polynom") {
-                settings[key] = settings[key] + value;
+                settings[key] = settings[key] + ' ' + value;
                 continue;
             }
             if (key == "all") {
@@ -197,6 +200,10 @@ int main() {
     flog << "Data copying:                               successful\n";
     curr = clock();
 
+    /*for (auto i : approximation_table) {
+        std::cout << i << ' ' << settings[i] << '\n';
+    }*/
+
     for (i : approximation_table) {
         if (i == "polynom") {
             if (settings[i].size() != 1) {
@@ -206,23 +213,55 @@ int main() {
                 while (str_stream >> tmp) {
                     int m = to_int(tmp);
                     long double powers[m+1][m+1];
+                    long double results_[m + 1][1];
                     for (int j = 0; j < m + 1; j++) {
-                        for (int k = j; k < m + 1 + j; k++) {
+                        results_[j][0] = 0;
+                        for (int k = 0; k < m + 1; k++) {
                             powers[j][k] = 0;
                         }
                     }
                     for (int ind = 0; ind < n; ind++) {
                         for (int j = 0; j < m + 1; j++) {
                             for (int k = j; k < m + 1 + j; k++) {
-                                powers[j][k] += pow(data_x[ind], j + k);
+                                powers[j][k - j] += pow(data_x[ind], k);
                             }
                         }
                     }
-                    //Matrix <long long double> matrix(*powers, m + 1, m + 1);
-                    //Вычисление аппроксимации многочленом степени m.
+
+                    for (int j = 0; j < m + 1; j++) {
+                        for (int ind = 0; ind < n; ind++) {
+                            results_[j][0] += data_y[ind] * pow(data_x[ind], j);
+                        }
+                    }
+                    Matrix <long double> matrix(*powers, m + 1, m + 1);
+                    Matrix <long double> results(*results_, m + 1, 1);
+                    //std::cout << m << '\n';
+                    //std::cout << matrix << '\n';
+                    //std::cout << results << '\n';
+                    //std::cout << matrix.determinant() << '\n' << '\n';
+                    Matrix <long double> ans = gauss(matrix, results);
+                    //std::cout << ans << '\n';
+                    if (ans.getN() != m + 1) {
+                        fer << "CRITICAL ERROR! Something went wrong: approximation by polynom.\n";
+                        flog << "Approximation by polynom:                     failed\n";
+                        curr = clock() - curr;
+                        ftimelog << "Approximation by polynom                        " << ((double)curr) / CLOCKS_PER_SEC << " sec\n";
+                        curr = clock();
+                        continue;
+                    }
+                    fout << "y = " << ans(0);
+                    for (int j = 1; j < m + 1; j++) {
+                        if (ans(j) < 0) {
+                            fout << " - " << fabs(ans(j));
+                        } else {
+                            fout << " + " << ans(j);
+                        }
+                        fout << "*x^" << j;
+                    }
+                    fout << '\n';
                     curr = clock() - curr;
                     ftimelog << "Approximation by polynom " << m << "                    " << ((double)curr) / CLOCKS_PER_SEC << " sec\n";
-                    flog << "Approximation by polynom:                    successful\n";
+                    flog << "Approximation by polynom " << m << ":                 successful\n";
                     curr = clock();
                 }
             }
@@ -302,7 +341,7 @@ int main() {
                     break;
                 }
                 double y = data_y[j], ln_x = log(data_x[j]);
-                sum_y_lnx += y * ln_x;
+                sum_y_lnx += y*ln_x;
                 sum_lnx += ln_x;
                 sum_y += y;
                 sum_lnx2 += ln_x*ln_x;
@@ -316,9 +355,9 @@ int main() {
             double b = (n*sum_y_lnx - sum_lnx*sum_y)/(n*sum_lnx2 - sum_lnx*sum_lnx);
             double a = sum_y/n - b*sum_lnx/n;
             if (b < 0) {
-                fout << "y = " << a << " - " << fabs(b) << "(ln(x)\n";
+                fout << "y = " << a << " - " << fabs(b) << "*(ln(x))\n";
             } else {
-                fout << "y = " << a << " + " << b << "(ln(x)\n";
+                fout << "y = " << a << " + " << b << "*(ln(x))\n";
             }
             curr = clock() - curr;
             ftimelog << "Approximation by log                          " << ((double)curr) / CLOCKS_PER_SEC << " sec\n";
