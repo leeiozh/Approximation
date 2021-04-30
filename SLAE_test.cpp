@@ -4,23 +4,35 @@
 #include "csr.h"
 
 int main() {
-    int n, m;
+
+    int n , m;
 
     std::cin >> n >> m;
 
-    auto* arr = new double [9];
+    auto* arr = new double [n*m];
 
-    for (int i = 0; i < n * m; i++){
+    for (int i = 0; i < n*m; i++){
         std::cin >> arr[i];
     }
 
-    CSR<double> matr(n, m, to_csr(arr, n, m));
+    auto* b = new double [n];
 
-    std::vector<double> b(n);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++){
         std::cin >> b[i];
     }
 
-    std::cout << gmres(matr, b);
+    std::vector<double> results(n);
+
+    for (int i = 0; i < n; i++){
+        results[i] = b[i];
+    }
+    std::vector<double> ans = gmres(CSR<double> (n, m, to_tripl(arr, n, m)), results);
+
+    delete [] arr;
+    delete [] b;
+
+    for (int i = 0; i < n; i++){
+        std::cout << " "<< ans[i];
+    }
 }
 

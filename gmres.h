@@ -11,7 +11,7 @@
 #include <vector>
 
 template<typename T>
-std::vector<T> gmres(const CSR<T>& A, const std::vector<T>& b){
+std::vector<T> gmres(CSR<T> A, std::vector<T> b){
     std::vector<T> x(b.size());
     std::vector<T> r = b - A*x;
     int m = A.sizeW();

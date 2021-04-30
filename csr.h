@@ -4,7 +4,6 @@
 
 #ifndef APPROXIMATION_CSR_H
 #define APPROXIMATION_CSR_H
-#include "Vmatrix.h"
 #include <set>
 
 template<typename T>
@@ -35,7 +34,7 @@ public:
     CSR(const idx_t &h, const idx_t &w, const std::set<Triplet<elm_t>>& in): H(h), W(w){
         values.resize(in.size());
         cols.resize(in.size());
-        rows.resize(H+1);
+        rows.resize(h+1);
         int countInRow = 0;
         int currRow = 0;
         auto it = in.begin();
@@ -92,7 +91,7 @@ std::ostream& operator<<(std::ostream& os, const CSR<T>& A){
 }
 
 template<typename T>
-std::set<Triplet<T>> to_csr (T* arr, int n, int m) {
+std::set<Triplet<T>> to_tripl(T* arr, int n, int m) {
     std::set<Triplet<T>> in;
     for (size_t i = 0; i < n; i++){
         for (size_t j = 0; j < m; j++){

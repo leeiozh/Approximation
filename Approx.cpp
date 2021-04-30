@@ -1,8 +1,10 @@
 #include "Sources\\.h\\matrix.h"
 #include "Sources\\.h\\polynom.h"
-#include "Sources\\.h\\gauss.h"
-//#include "Sources\\.h\\head_gauss.h"
-
+#include "Sources\\.h\\gmres.h"
+#include "Sources\\.h\\csr.h"
+#include "Sources\\.h\\krylov.h"
+#include "Sources\\.h\\back_gauss.h"
+#include <vector>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -199,11 +201,11 @@ int main() {
     ftimelog << "Data copying                                  " << ((double)curr) / CLOCKS_PER_SEC << " sec\n";
     flog << "Data copying:                               successful\n";
     curr = clock();
-
-    /*for (auto i : approximation_table) {
+/*
+    for (auto i : approximation_table) {
         std::cout << i << ' ' << settings[i] << '\n';
-    }*/
-
+    }
+*/
     for (i : approximation_table) {
         if (i == "polynom") {
             if (settings[i].size() != 1) {
@@ -233,15 +235,14 @@ int main() {
                             results_[j][0] += data_y[ind] * pow(data_x[ind], j);
                         }
                     }
-                    Matrix <long double> matrix(*powers, m + 1, m + 1);
-                    Matrix <long double> results(*results_, m + 1, 1);
-                    //std::cout << m << '\n';
-                    //std::cout << matrix << '\n';
-                    //std::cout << results << '\n';
-                    //std::cout << matrix.determinant() << '\n' << '\n';
-                    Matrix <long double> ans = gauss(matrix, results);
+                    //Matrix <long double> matrix(*powers, m + 1, m + 1);
+                    std::vector<long double> results(m + 1)
+                    for (int i = 0; i < m + 1; i++){
+                        results[i] = results_[i][0];
+                    }
+                    std::vector<long double> ans = gmres(CSR<double> (m + 1, m + 1, to_tripl(powers, m + 1, m + 1)), results);
                     //std::cout << ans << '\n';
-                    if (ans.getN() != m + 1) {
+                    if (ans.size() != m + 1) {
                         fer << "CRITICAL ERROR! Something went wrong: approximation by polynom.\n";
                         flog << "Approximation by polynom:                     failed\n";
                         curr = clock() - curr;
@@ -249,12 +250,12 @@ int main() {
                         curr = clock();
                         continue;
                     }
-                    fout << "y = " << ans(0);
+                    fout << "y = " << ans[0];
                     for (int j = 1; j < m + 1; j++) {
-                        if (ans(j) < 0) {
-                            fout << " - " << fabs(ans(j));
+                        if (ans[j] < 0) {
+                            fout << " - " << fabs(ans[j]);
                         } else {
-                            fout << " + " << ans(j);
+                            fout << " + " << ans[j];
                         }
                         fout << "*x^" << j;
                     }
